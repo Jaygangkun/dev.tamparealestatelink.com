@@ -8,12 +8,18 @@
 ####################
 # Define Variables #
 ####################
-require_once('func/class.phpmailer.php');
+if(isset($func_path)){
+    require_once($func_path.'/class.phpmailer.php');
+}
+else{
+    require_once('func/class.phpmailer.php');
+}
+
 
 ########################
 # Send Emails Function #
 ########################
-function email($to,$subject,$body,$fromaddress,$fromname='',$att_path,$att_filename)
+function email($to,$subject,$body,$fromaddress,$fromname='',$att_path=null,$att_filename='')
 {
  $email = new PHPMailer();
  $email->IsHTML(true);
@@ -22,7 +28,10 @@ function email($to,$subject,$body,$fromaddress,$fromname='',$att_path,$att_filen
  $email->Subject   = $subject;
  $email->Body      = $body;
  $email->AddAddress($to);
- $email->AddAttachment($att_path.$att_filename,$att_filename);
+ if($att_path){
+    $email->AddAttachment($att_path.$att_filename,$att_filename);
+ }
+ 
  return $email->Send();
 }
 
