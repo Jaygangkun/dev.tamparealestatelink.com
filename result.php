@@ -363,8 +363,31 @@ function toGallery() {
 					#slider_img {
 						margin-bottom: 20px;
 					}
+
+					#slider_img.loading .sp-slide {
+						position: initial;
+					}
+
+					.sp-slides-container .sp-grab,
+					.sp-slides-container .sp-grabbing {
+						background-color: #FFF;
+						border: 4px solid #FFF;
+						-moz-box-shadow: 0 0 10px #CCC;
+						-webkit-box-shadow: 0 0 10px #ccc;
+						box-shadow: 0 0 10px #ccc;
+					}
+
+					.sp-bottom-thumbnails.sp-has-pointer {
+						/* margin-left: 4px; */
+					}
+					@media screen and (max-width: 992px) {
+						#slider_img .sp-thumbnails {
+							display: none;
+						}
+					}
+
 					</style>
-					<div id="slider_img" class="slider-pro">
+					<div id="slider_img" class="slider-pro loading">
 						<div class="sp-slides">
 						<?php
 
@@ -714,7 +737,7 @@ function toGallery() {
 					height: 500,
 					arrows: true,
 					buttons: false,
-					waitForLayers: true,
+					waitForLayers: false,
 					thumbnailWidth: 200,
 					thumbnailHeight: 100,
 					thumbnailPointer: true,
@@ -725,8 +748,12 @@ function toGallery() {
 							thumbnailWidth: 120,
 							thumbnailHeight: 50
 						}
-					}
+					},
+					supportedAnimation: true,
+					fade: true,
 				});
+
+				$( '#slider_img' ).removeClass('loading');
 			}
 			
 		});
