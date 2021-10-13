@@ -244,9 +244,9 @@ include $path.'header.php';
 
 ?>
 
+<link rel="stylesheet" href="/css/slider-pro.min.css" type="text/css">
+<script async src="/js/jquery.sliderPro.min.js"></script>
 
-
-<script src="/js/responsiveslides.min.js"></script>
 
 <script> 
 
@@ -351,14 +351,47 @@ function toGallery() {
 					}
 
 				?>
+					<style>
+					.sp-thumbnail {
+						width: 100%;
+						height: 100%;
+						background-size: cover;
+						background-position: center;
+						background-repeat: no-repeat;
+					}
 
-
-
-				
-
-					<ul class="rslides rslides1" onclick="toGallery()" style="cursor:pointer;">
-
+					#slider_img {
+						margin-bottom: 20px;
+					}
+					</style>
+					<div id="slider_img" class="slider-pro">
+						<div class="sp-slides">
 						<?php
+
+							$imgs = listImages($img_dir);
+
+							$i = 0;
+
+							foreach($imgs as $k => $img)
+
+							{
+
+								$i++;
+
+								?>
+								<div class="sp-slide">
+									<img class="sp-image" src="<?php echo $img_base_url.$img?>"
+										data-src="<?php echo $img_base_url.$img?>"
+										data-retina="<?php echo $img_base_url.$img?>"/>
+								</div>
+								<?php
+
+							}
+						?>
+						</div>
+
+						<div class="sp-thumbnails">
+							<?php
 
 								$imgs = listImages($img_dir);
 
@@ -368,17 +401,18 @@ function toGallery() {
 
 								{
 
-								 $i++;
+									$i++;
 
-								 echo '<li><img src="'.$img_base_url.$img.'" alt=""></li>';
+									?>
+									<div class="sp-thumbnail" style="background-image:url(<?php echo $img_base_url.$img?>)">
+									</div>
+									<?php
 
 								}
 
-						?>
-
-
-
-					</ul>
+							?>
+						</div>
+					</div>
 
 					<div class="gallery-bottom">
 						<a class="gallery-bottom__more-link" href="/photo-gallery.php?mls=<?=$mls?>">More photos...</a>
@@ -635,20 +669,70 @@ function toGallery() {
 
 <script>
 
-$(function () {
+	function checkjQuery(){
 
+		if(window.jQuery){
 
+			console.log('jQuery loaded');
 
-    // Slideshow 1
+			callbackjQuery();
 
-    $(".rslides1").responsiveSlides({
+			return true;
 
-      speed: 1000
+		}
 
-    });
+		setTimeout(function(){
 
-  });
+			checkjQuery();
 
+		}, 100);
+
+		return false;
+
+	}
+
+	checkjQuery();
+
+	function callbackjQuery() {
+		jQuery(document).ready(function($){
+			function checkSlierProLoaded() {
+				if(jQuery.fn.sliderPro){
+					cbSliderProLoaded();
+					return true;
+				}
+
+				setTimeout(function(){
+					checkSlierProLoaded();
+				}, 100);
+			}
+
+			checkSlierProLoaded();
+
+			function cbSliderProLoaded() {
+				$( '#slider_img' ).sliderPro({
+					width: 960,
+					height: 500,
+					arrows: true,
+					buttons: false,
+					waitForLayers: true,
+					thumbnailWidth: 200,
+					thumbnailHeight: 100,
+					thumbnailPointer: true,
+					autoplay: false,
+					autoScaleLayers: false,
+					breakpoints: {
+						500: {
+							thumbnailWidth: 120,
+							thumbnailHeight: 50
+						}
+					}
+				});
+			}
+			
+		});
+	}
+
+  	
 </script>
 
 <?php
