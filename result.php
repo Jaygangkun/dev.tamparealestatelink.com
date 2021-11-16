@@ -368,6 +368,10 @@ function toGallery() {
 						position: initial;
 					}
 
+					#slider_img.loading .sp-slide .sp-image {
+						display: none;
+					}
+
 					.sp-slides-container .sp-grab,
 					.sp-slides-container .sp-grabbing {
 						background-color: #FFF;
@@ -733,8 +737,6 @@ function toGallery() {
 
 			function cbSliderProLoaded() {
 				$( '#slider_img' ).sliderPro({
-					width: 960,
-					height: 500,
 					arrows: true,
 					buttons: false,
 					waitForLayers: false,
