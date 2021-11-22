@@ -384,8 +384,23 @@ function toGallery() {
 					.sp-bottom-thumbnails.sp-has-pointer {
 						/* margin-left: 4px; */
 					}
+
+					.sp-image {
+						margin-left: initial !important;
+						margin-top: initial !important;
+						position: relative;
+						left: 50%;
+						top: 50%;
+						transform: translate(-50%, -50%);
+						width: 100% !important;
+					}
+
 					@media screen and (max-width: 992px) {
 						#slider_img .sp-thumbnails {
+							display: none;
+						}
+
+						#slider_img .sp-arrows {
 							display: none;
 						}
 					}
@@ -400,19 +415,24 @@ function toGallery() {
 							$i = 0;
 
 							foreach($imgs as $k => $img)
-
-							{
-
-								$i++;
-
+							{								
 								?>
 								<div class="sp-slide">
-									<img class="sp-image" src="<?php echo $img_base_url.$img?>"
-										data-src="<?php echo $img_base_url.$img?>"
-										data-retina="<?php echo $img_base_url.$img?>"/>
+									<?php
+									if($i == 0) {
+										?>
+										<img class="sp-image" src="<?php echo $img_base_url.$img?>" data-src1="<?php echo $img_base_url.$img?>" data-retina="<?php echo $img_base_url.$img?>"/>
+										<?php
+									}
+									else {
+										?>
+										<img class="sp-image sp-image-lazyload" data-src1="<?php echo $img_base_url.$img?>" data-retina="<?php echo $img_base_url.$img?>"/>
+										<?php
+									}
+									?>
 								</div>
 								<?php
-
+								$i++;
 							}
 						?>
 						</div>
@@ -696,13 +716,13 @@ function toGallery() {
 
 <script>
 
-	function checkjQuery(){
+	function checkjQueryForResultPage(){
 
 		if(window.jQuery){
 
 			console.log('jQuery loaded');
 
-			callbackjQuery();
+			callbackjQueryForResultPage();
 
 			return true;
 
@@ -710,7 +730,7 @@ function toGallery() {
 
 		setTimeout(function(){
 
-			checkjQuery();
+			checkjQueryForResultPage();
 
 		}, 100);
 
@@ -718,16 +738,15 @@ function toGallery() {
 
 	}
 
-	checkjQuery();
+	checkjQueryForResultPage();
 
-	function callbackjQuery() {
-		jQuery(document).ready(function($){
+	function callbackjQueryForResultPage() {
+		(function($){
 			function checkSlierProLoaded() {
 				if(jQuery.fn.sliderPro){
 					cbSliderProLoaded();
 					return true;
 				}
-
 				setTimeout(function(){
 					checkSlierProLoaded();
 				}, 100);
@@ -754,11 +773,27 @@ function toGallery() {
 					supportedAnimation: true,
 					fade: true,
 				});
-
 				$( '#slider_img' ).removeClass('loading');
+
+				setTimeout(function(){
+					sliderImagesLazyLoad()
+				}, 100);
+			}
+
+			function sliderImagesLazyLoad() {
+				let img_count = <?php echo count($imgs); ?>
+
+				let lazyloadimages = $('.sp-image-lazyload');
+				for(var i = 0; i < (img_count / 2 + 1); i++) {
+					let img = $('.sp-slide[data-index="' + i + '"] .sp-image');
+					$(img).attr('src', $(img).attr('data-src1'));
+
+					img = $('.sp-slide[data-index="' + (img_count - i) + '"] .sp-image');
+					$(img).attr('src', $(img).attr('data-src1'));
+				}
 			}
 			
-		});
+		})(jQuery);
 	}
 
   	
